@@ -10,8 +10,12 @@ import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Rotatable;
+import org.openqa.selenium.ScreenOrientation;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.appium.java_client.AppiumDriver;
@@ -48,6 +52,7 @@ public class IOSWalmartInterview {
 		capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "9.2");
 		capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone 5s");
 		capabilities.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
+		capabilities.setCapability(MobileCapabilityType.ROTATABLE, true);
 		driver = new IOSDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -133,6 +138,42 @@ public class IOSWalmartInterview {
 		catch (Exception e) {
 			e.printStackTrace();
 		}	
+	}
+	
+	/**
+	 * 
+	 * This test is to verify if the Slider is working as expected using Appium IOS Slider functionality in Landscape mode. 
+	 * Catch the exception if there is any issue like app crash, Slider struck etc..
+	 * @throws Exception
+	 * 
+	 */
+	
+	@Test 
+	public void testSpinSliderLandscape() throws Exception {
+		
+		WebDriver augmentedDriver = new Augmenter().augment(driver);
+		((Rotatable)augmentedDriver).rotate(ScreenOrientation.LANDSCAPE);
+		WebElement slider = driver.findElementByClassName("UIASlider");
+		
+		int actPercent = 0, expPercent = 0;
+		
+		try {
+			for(double i= 0.1f ; i < 1.0f ; i += 0.1f) {
+				slider.sendKeys(" " + i + " ");
+				actPercent = (int) (i*100);
+				String strPercent = slider.getAttribute("value");
+				String[] extractPercent = strPercent.split("%");
+				expPercent = Integer.parseInt(extractPercent[0]);
+				boolean isSliderWorking = ((actPercent < expPercent) && (expPercent <= actPercent+5));
+				assertTrue("Slider Value is not in Range", isSliderWorking);
+				} 
+		}
+		catch(WebDriverException e){
+			throw e;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}			
 	}
 	
 	/**
