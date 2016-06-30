@@ -176,6 +176,20 @@ public class IOSWalmartInterview {
 		}			
 	}
 	
+	/**
+	 * 
+	 * This test is to verify if the Image is spinning clockwise when we move the slider on the Landscape mode.
+	 * Catch the exception if there is any issue like app crash, Slider struck etc..
+	 * The clockwise spinning was not feasible to automate as the attribute Location & Size is not 
+	 * sufficient enough to calculate the clockwise spinning.
+	 * The other option is Image comparision by capturing the image when we move the slider, 
+	 * the sampling is more important on this options as the image spin is not clear on how many frames 
+	 * we need to capture
+	 * Using the below logic we were able to verify the image is spinning, the idea is the X & Y values 
+	 * varies between each quadrant but it can't reach the maximum value of 4.
+	 * @throws Exception
+	 * 
+	 */
 	
 	@Test
 	public void testImageSpinLandscape() throws Exception {
