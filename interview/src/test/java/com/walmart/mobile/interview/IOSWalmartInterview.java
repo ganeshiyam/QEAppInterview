@@ -176,6 +176,45 @@ public class IOSWalmartInterview {
 		}			
 	}
 	
+	
+	@Test
+	public void testImageSpinLandscape() throws Exception {
+		
+		WebDriver augmentedDriver = new Augmenter().augment(driver);
+		((Rotatable)augmentedDriver).rotate(ScreenOrientation.LANDSCAPE);
+		WebElement slider = driver.findElementByClassName("UIASlider");
+		WebElement logo = driver.findElementByClassName("UIAImage");
+		
+		int x = 0, y = 0, preX = -1, preY = -1;
+		
+		try {
+			for(double i= 0f ; i < 1.0f ; i += 0.1f) {
+				slider.sendKeys(" " + i + " ");							
+				
+				if (logo.getLocation().getX() > preX) {
+					x++;
+				} else x--;
+				
+				if (logo.getLocation().getY() > preY) {
+					y++;
+				} else y--;
+				
+				boolean isImageSpinning = (Math.abs(x) > 4 || Math.abs(y) > 4);
+				assertFalse("The Image Spin is not working", isImageSpinning);	
+				preX = logo.getLocation().getX();
+				preY = logo.getLocation().getY();										
+				
+			} 
+		}
+		catch(WebDriverException e){
+			throw e;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	
 	/**
 	 * 
 	 * IOSDriver quit after every test case is completed.
